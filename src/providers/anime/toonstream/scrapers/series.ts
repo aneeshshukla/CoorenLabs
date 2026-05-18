@@ -3,7 +3,6 @@ import { Cache } from "../lib/cache";
 import { EPISODE_IFRAMES_TTL, TOONSTREAM_BASE } from "../lib/const";
 import { AnimeCard, Cast, Episode, Genre, Season, Tag } from "../lib/types";
 import { getDirectSources, getPlayerIframeUrls } from "./source";
-import { Request } from "express";
 
 export async function ScrapeSeries(page: number = 1) {
   const url = TOONSTREAM_BASE + "/series/" + (page == 1 ? "" : `page/${page}/`);
