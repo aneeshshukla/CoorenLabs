@@ -3,7 +3,10 @@ import { PORT, validateConfig } from "./core/config";
 import { Logger } from "./core/logger";
 import { isDeno } from "./core/runtime";
 
+import { remapManager } from "./core/remapManager";
+
 validateConfig();
+await remapManager.init();
 
 const app = await createApp();
 
