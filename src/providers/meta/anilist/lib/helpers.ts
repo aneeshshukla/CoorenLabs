@@ -72,6 +72,11 @@ export async function fetchWithRetry(
 
       if (res.status === 429) {
         console.warn(`[anilist-meta] Rate limited, retrying… (${i + 1}/${retries})`);
+        const retryAfter = res.headers.get("Retry-After");
+        const delayMs = retryAfter && !isNaN(parseInt(retryAfter, 10)) 
+          ? parseInt(retryAfter, 10) * 1000 
+          : 1000 * Math.pow(2, i);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
         continue;
       }
 
@@ -80,6 +85,9 @@ export async function fetchWithRetry(
       clearTimeout(timer);
       lastError = err;
       console.warn(`[anilist-meta] Fetch failed (${i + 1}/${retries}):`, (err as Error).message);
+      if (i < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, i)));
+      }
     }
   }
 
